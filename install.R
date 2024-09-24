@@ -19,6 +19,7 @@ cran_packages <- c(
   "detectRUNS","0.9.6", 
   "pwr","1.3" ,
   "plotly","4.9.3",
+  "Matrix", "1.7-0",
   "mixtools","1.2.0",
   "mclust","5.4.7",
   "pheatmap","1.0.12",
