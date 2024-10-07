@@ -155,6 +155,7 @@ RUN apt-get update -qq --yes && \
 COPY install-mambaforge.bash /tmp/install-mambaforge.bash
 RUN chmod 777 /tmp/install-mambaforge.bash
 RUN /tmp/install-mambaforge.bash
+RUN rm /tmp/install-mambaforge.bash
 
 USER ${NB_USER}
 
@@ -165,6 +166,8 @@ RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && \
     mamba clean -afy
 
 USER root
+RUN rm /tmp/environment.yml /tmp/infra-requirements.txt
+
 ENV PLAYWRIGHT_BROWSERS_PATH ${CONDA_DIR}
 RUN playwright install-deps
 RUN chown -Rh jovyan:jovyan /srv/conda
@@ -174,10 +177,6 @@ USER ${NB_USER}
 # DH-333
 ENV PLAYWRIGHT_BROWSERS_PATH ${CONDA_DIR}
 RUN playwright install chromium
-
-# 2024-01-13 sknapp: incompatible due to notebook 7
-# RUN jupyter contrib nbextensions install --sys-prefix --symlink && \
-#     jupyter nbextensions_configurator enable --sys-prefix
 
 # Set CRAN mirror to rspm before we install anything
 COPY Rprofile.site /usr/lib/R/etc/Rprofile.site
@@ -198,15 +197,24 @@ RUN r /tmp/install.R && \
     rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # install bio1b packages
+USER ${NB_USER}
 COPY bio1b-packages.bash /tmp/bio1b-packages.bash
 RUN bash /tmp/bio1b-packages.bash
+USER root
+RUN rm /tmp/bio1b-packages.bash
 
 # install ib134L packages
+USER ${NB_USER}
 COPY ib134-packages.bash /tmp/ib134-packages.bash
 RUN bash /tmp/ib134-packages.bash
+USER root
+RUN rm /tmp/ib134-packages.bash
 
 # install ccb293 packages
+USER ${NB_USER}
 COPY ccb293-packages.bash /tmp/ccb293-packages.bash
 RUN bash /tmp/ccb293-packages.bash
+USER root
+RUN rm /tmp/ccb293-packages.bash
 
 ENTRYPOINT ["tini", "--"]
