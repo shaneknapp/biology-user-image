@@ -155,6 +155,7 @@ RUN apt-get update -qq --yes && \
 COPY install-mambaforge.bash /tmp/install-mambaforge.bash
 RUN chmod 777 /tmp/install-mambaforge.bash
 RUN /tmp/install-mambaforge.bash
+RUN rm /tmp/install-mambaforge.bash
 
 USER ${NB_USER}
 
@@ -163,6 +164,8 @@ COPY infra-requirements.txt /tmp/
 
 RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && \
     mamba clean -afy
+
+RUN rm /tmp/environment.yml /tmp/infra-requirements.txt
 
 USER root
 ENV PLAYWRIGHT_BROWSERS_PATH ${CONDA_DIR}
@@ -200,13 +203,16 @@ RUN r /tmp/install.R && \
 # install bio1b packages
 COPY bio1b-packages.bash /tmp/bio1b-packages.bash
 RUN bash /tmp/bio1b-packages.bash
+RUN rm /tmp/bio1b-packages.bash
 
 # install ib134L packages
 COPY ib134-packages.bash /tmp/ib134-packages.bash
 RUN bash /tmp/ib134-packages.bash
+RUN rm /tmp/ib134-packages.bash
 
 # install ccb293 packages
 COPY ccb293-packages.bash /tmp/ccb293-packages.bash
 RUN bash /tmp/ccb293-packages.bash
+RUN rm /tmp/ccb293-packages.bash
 
 ENTRYPOINT ["tini", "--"]
