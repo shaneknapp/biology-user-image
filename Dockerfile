@@ -3,19 +3,19 @@ FROM buildpack-deps:jammy-scm
 ENV TZ=America/Los_Angeles
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
-ENV NB_USER jovyan
-ENV NB_UID 1000
+ENV NB_USER=jovyan
+ENV NB_UID=1000
 
-ENV CONDA_DIR /srv/conda
-ENV R_LIBS_USER /srv/r
+ENV CONDA_DIR=/srv/conda
+ENV R_LIBS_USER=/srv/r
 
 # Explicitly add littler to PATH
 # See https://github.com/conda-forge/r-littler-feedstock/issues/6
-ENV PATH ${CONDA_DIR}/lib/R/library/littler/bin:${CONDA_DIR}/bin:$PATH
+ENV PATH=${CONDA_DIR}/lib/R/library/littler/bin:${CONDA_DIR}/bin:$PATH
 
 RUN adduser --disabled-password --gecos "Default Jupyter user" ${NB_USER}
 
@@ -161,22 +161,21 @@ RUN rm /tmp/install-miniforge.bash
 USER ${NB_USER}
 
 COPY environment.yml /tmp/
-COPY infra-requirements.txt /tmp/
 
-RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && \
+RUN mamba env update -q -p ${CONDA_DIR} -f /tmp/environment.yml && \
     mamba clean -afy
 
 USER root
-RUN rm /tmp/environment.yml /tmp/infra-requirements.txt
+RUN rm /tmp/environment.yml 
 
-ENV PLAYWRIGHT_BROWSERS_PATH ${CONDA_DIR}
+ENV PLAYWRIGHT_BROWSERS_PATH=${CONDA_DIR}
 RUN playwright install-deps
 RUN chown -Rh jovyan:jovyan /srv/conda
 
 USER ${NB_USER}
 
 # DH-333
-ENV PLAYWRIGHT_BROWSERS_PATH ${CONDA_DIR}
+ENV PLAYWRIGHT_BROWSERS_PATH=${CONDA_DIR}
 RUN playwright install chromium
 
 # Set CRAN mirror to rspm before we install anything
@@ -217,5 +216,10 @@ COPY ccb293-packages.bash /tmp/ccb293-packages.bash
 RUN bash /tmp/ccb293-packages.bash
 USER root
 RUN rm /tmp/ccb293-packages.bash
+
+USER ${NB_USER}
+WORKDIR /home/${NB_USER}
+
+EXPOSE 8888
 
 ENTRYPOINT ["tini", "--"]
