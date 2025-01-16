@@ -87,7 +87,8 @@ dependencies:
     # DH-418 requires pandas 1.5.3, conflicts with otter-grader which needs 2.2.2
     # - allensdk==2.16.2
     - otter-grader==6.0.4
-  # for exporting notebooks to pdf
+  # required for basic functionality
+    - git-credential-helpers==0.2
     - nbconvert[webpdf]==7.16.5
     - nb2pdf==0.6.2
     - nbpdfexport==0.2.1
