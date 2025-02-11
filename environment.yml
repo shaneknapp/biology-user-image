@@ -8,6 +8,7 @@ dependencies:
   # DH-418, bunch of stuff fails to install if git is set higher to this e.g. git==2.47.1
   - git==2.38.1 
   - jupyter-archive==3.4.0
+  - jupyter-offlinenotebook==0.3.1
   - jupyter-resource-usage==1.1.0  
   - jupyter-server-proxy==4.4.0
   - jupyter_server==2.15.0 
@@ -18,6 +19,7 @@ dependencies:
   - jupytext==1.16.6
   - nbgitpuller==1.2.1
   - notebook==7.3.2
+  - otter-grader==6.1.0
   - pip==24.3.1  
   - python==3.11.*
 
@@ -86,7 +88,6 @@ dependencies:
   # Packages for MCB-160L iss #3942
     # DH-418 requires pandas 1.5.3, conflicts with otter-grader which needs 2.2.2
     # - allensdk==2.16.2
-    - otter-grader==6.0.4
   # required for basic functionality
     - git-credential-helpers==0.2
     - nbconvert[webpdf]==7.16.5
