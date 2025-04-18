@@ -93,7 +93,7 @@ RUN curl --silent --location --fail https://cloud.r-project.org/bin/linux/ubuntu
 RUN apt-get update -qq --yes > /dev/null && \
     apt-get install --yes -qq \
         r-base-core=${R_VERSION} \
-        r-base-dev=${R_VERSION} > /dev/null
+        r-base-dev=${R_VERSION} r-cran-littler=${LITTLER_VERSION} > /dev/null
 RUN apt-get install --yes -qq littler=${LITTLER_VERSION} > /dev/null
 
 RUN apt-get install --yes -qq libglpk-dev \
@@ -224,6 +224,9 @@ COPY ccb293-packages.bash /tmp/ccb293-packages.bash
 RUN bash /tmp/ccb293-packages.bash
 USER root
 RUN rm /tmp/ccb293-packages.bash
+
+ENV REPO_DIR=/srv/repo
+COPY --chown=${NB_USER}:${NB_USER} image-tests ${REPO_DIR}/image-tests
 
 USER ${NB_USER}
 WORKDIR /home/${NB_USER}
