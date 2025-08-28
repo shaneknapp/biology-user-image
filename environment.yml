@@ -57,7 +57,6 @@ dependencies:
 
   # Packages for MCB280A, Spring 2022
   - bedtools==2.31.1
-  - datascience==0.17.6
 
   # Packages from bioconda for BIO1B
   - dendropy==4.4.0
@@ -93,3 +92,5 @@ dependencies:
     - nbconvert[webpdf]==7.16.6
     - nb2pdf==0.6.2
     - nbpdfexport==0.2.1
+  # DH - 557 
+    - datascience==0.18.0
